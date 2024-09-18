@@ -1,0 +1,11 @@
+# syntax=docker/dockerfile:1
+FROM golang:1.19-alpine AS builder
+WORKDIR /app
+COPY ./tcp_client/tcp_client.go .
+RUN go build -o /bin/client ./tcp_client.go
+
+FROM alpine:latest
+WORKDIR /app
+COPY --from=builder /bin/client /bin/client
+EXPOSE 3333
+CMD ["/bin/client"]
